@@ -32,7 +32,7 @@ Ensure you have the following installed:
 1. **Clone the repository**:
    If you haven't already cloned the repository, use the following command:
    ```bash
-   git clone https://github.com/your-repository-url
+   git clone https://github.com/SaloniKale1704/Selenium_POM_Framework
 
 2. Import the project into Eclipse:
     1. Open Eclipse IDE.
