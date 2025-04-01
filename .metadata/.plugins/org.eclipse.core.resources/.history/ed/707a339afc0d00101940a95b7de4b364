@@ -1,0 +1,115 @@
+package com.utils;
+
+import java.time.Duration;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.aventstack.extentreports.ExtentTest;
+
+public class CommonFunctions {
+
+	private WebDriver driver;
+	private ExtentTest test;
+
+	public CommonFunctions(WebDriver driver, ExtentTest test) {
+		this.driver = driver;
+		this.test = test;
+	}
+
+	//click on element
+	public void clickElement(WebElement element, String elementName) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(element));
+
+			element.click();
+			test.info("Clicked on " + elementName);
+
+			//Capture screenshot after clicking the element
+			String screenshotPath = ScreenshotUtil.takeScreenshot(driver, elementName + "Clicked");
+			test.addScreenCaptureFromPath(screenshotPath);
+
+		} catch (Exception e) {
+			test.fail("Failed to click on " + elementName + ": " + e.getMessage());
+			String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "click" + elementName + "Error");
+			test.addScreenCaptureFromPath(screenshotPath);
+		}
+	}
+	
+	//Enter text in field
+	public void enterText(WebElement element, String text, String elementName) {
+        try {
+            test.info("Entering text into " + elementName + ": " + text);
+            element.sendKeys(text);
+            test.pass("Text entered into " + elementName + " successfully.");
+            
+            //Capture screenshot after entering text
+            String screenshotPath = ScreenshotUtil.takeScreenshot(driver, elementName + "TextEntered");
+            test.addScreenCaptureFromPath(screenshotPath);
+            
+        } catch (Exception e) {
+            test.fail("Failed to enter text into " + elementName + ": " + e.getMessage());
+            String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "enterText" + elementName + "Error");
+            test.addScreenCaptureFromPath(screenshotPath);
+        }
+    }
+
+	//select value from dropdown
+    public void selectFromDropdownByValue(WebElement element, String value, String elementName) {
+        try {
+            test.info("Selecting value from " + elementName + ": " + value);
+            Select dropdown = new Select(element);
+            dropdown.selectByValue(value);
+            test.pass("Value selected from " + elementName + " successfully.");
+            
+            //Capture screenshot after selecting value
+            String screenshotPath = ScreenshotUtil.takeScreenshot(driver, elementName + "ValueSelected");
+            test.addScreenCaptureFromPath(screenshotPath);
+            
+        } catch (Exception e) {
+            test.fail("Failed to select value from " + elementName + ": " + e.getMessage());
+            String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "selectFromDropdown" + elementName + "Error");
+            test.addScreenCaptureFromPath(screenshotPath);
+        }
+    }
+
+    //Verify Webelement with string
+    public void verifyText(WebElement element, String expectedText, String elementName) {
+        try {
+            String actualText = element.getText();
+            if (actualText.equals(expectedText)) {
+                test.pass("Text verified in " + elementName + " successfully.");
+                
+                String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "verifyText" + elementName + "Error");
+                test.addScreenCaptureFromPath(screenshotPath);
+            }
+        } catch (Exception e) {
+            test.fail("Failed to verify text in " + elementName + ": " + e.getMessage());
+            String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "verifyText" + elementName + "Error");
+            test.addScreenCaptureFromPath(screenshotPath);
+        }
+    }
+    
+    //Get text from Webpage
+    public String getText(WebElement element, String elementName) {
+        try {
+            test.info("Getting text from " + elementName);
+            String text = element.getText();
+            test.pass("Text retrieved from " + elementName + " successfully.");
+            String screenshotPath = ScreenshotUtil.takeScreenshot(driver,elementName + "TextFound");
+            test.addScreenCaptureFromPath(screenshotPath);
+            return text;
+        } catch (Exception e) {
+            test.fail("Failed to get text from " + elementName + ": " + e.getMessage());
+            String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "getText" + elementName + "Error");
+            test.addScreenCaptureFromPath(screenshotPath);
+            return null;
+        }
+    }
+
+}

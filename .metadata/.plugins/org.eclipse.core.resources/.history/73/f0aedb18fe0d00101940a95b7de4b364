@@ -1,0 +1,46 @@
+package com.pages;
+
+import java.time.Duration;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import com.aventstack.extentreports.ExtentTest;
+import com.utils.CommonFunctions;
+
+public class LoginPage {
+    
+    private WebDriver driver;
+    private ExtentTest test;
+    private CommonFunctions commonFunctions;
+    
+    public LoginPage(WebDriver driver, ExtentTest test) {
+        this.driver = driver;
+        this.test = test;
+        this.commonFunctions = new CommonFunctions(driver, test);
+        PageFactory.initElements(driver, this);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+    }
+
+    // Elements
+    
+    @FindBy(id="user-name")
+    private WebElement usernameField;
+    
+    @FindBy(name="password")
+    private WebElement passwordField;
+    
+    @FindBy(css ="input[id='login-button']")
+    private WebElement loginBtn;
+    
+    // Methods
+    public void enterCredentials(String username, String password) {
+        commonFunctions.enterText(usernameField, username, "Username Field");
+        commonFunctions.enterText(passwordField, password, "Password Field");
+    }
+
+    public void clickLoginBtn() {
+        commonFunctions.clickElement(loginBtn, "Login Button");
+    }                
+}

@@ -1,0 +1,76 @@
+package com.pages;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+import com.aventstack.extentreports.ExtentTest;
+
+public class CartPage {
+
+	private WebDriver driver;
+	private ExtentTest test;
+
+	public CartPage(WebDriver driver,ExtentTest test) {
+		this.driver = driver;
+		this.test = test;
+		PageFactory.initElements(driver, this);
+	}
+
+	@FindBy(xpath = "//a[contains(@class,'shopping_cart_link')]")
+	private WebElement cart;
+
+	@FindBy(className = "cart_quantity")
+	WebElement quantity;
+
+	@FindBy(xpath = "//a[text()='CHECKOUT']")
+	WebElement checkoutBtn;
+
+	// Actions
+	// Go to cart page
+	public void goToCartPage() {
+		try {
+			test.info("Navigating to cart page.");
+			cart.click();
+			test.pass("Navigated to cart page successfully.");
+		} catch (Exception e) {
+			test.fail("Failed to navigate to cart page: " + e.getMessage());
+		}
+	}
+
+	// Verify quantity
+	public void verifyItemQty(String actualQty) {
+		try {
+			test.info("Verifying item quantity.");
+			double actualQtyDouble = Double.parseDouble(actualQty);
+			int actualQtyText = (int) actualQtyDouble;
+
+			String expectedQty = quantity.getText();
+			int expectedQtyText = Integer.parseInt(expectedQty);
+
+			System.out.println(expectedQty);
+
+			if (expectedQtyText == actualQtyText) {
+				System.out.println("Quantity " + expectedQty + " verified");
+				test.pass("Quantity verified successfully.");
+			} else {
+				System.out.println("Quantity is not as expected");
+				test.fail("Quantity is not as expected.");
+			}
+		} catch (Exception e) {
+			test.fail("Failed to verify item quantity: " + e.getMessage());
+		}
+	}
+
+	// Click on checkout button
+	public void clickCheckoutBtn() {
+		try {
+			test.info("Clicking checkout button.");
+			checkoutBtn.click();
+			test.pass("Checkout button clicked successfully.");
+		} catch (Exception e) {
+			test.fail("Failed to click checkout button: " + e.getMessage());
+		}
+	}
+}

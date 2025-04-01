@@ -1,0 +1,21 @@
+package com.utils;
+
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.aventstack.extentreports.ExtentReports;
+
+public class ExtentManager {
+	
+	public static ExtentReports extent;
+	
+	public static ExtentReports getInstance() {
+		if(extent == null) {
+			String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
+			String reportPath = "src/test/resources/Reports/ExtentReport_"+ timeStamp + ".html";
+		}
+		return extent;
+		
+	}
+}

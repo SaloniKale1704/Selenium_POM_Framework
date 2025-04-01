@@ -1,0 +1,25 @@
+package com.base;
+
+import org.openqa.selenium.WebDriver;
+
+import com.pages.CartPage;
+import com.pages.CheckoutPage;
+import com.pages.HomePage;
+import com.pages.LoginPage;
+
+public class PageInitializer {
+
+	public static LoginPage loginPage;
+	public static HomePage homePage;
+	public static CartPage cartPage;
+	public static CheckoutPage checkoutPage;
+	
+	public static void initializePages(WebDriver driver) {
+		// TODO Auto-generated constructor stub
+		loginPage = new LoginPage(driver);
+		homePage = new HomePage(driver);
+		cartPage = new CartPage(driver);
+		checkoutPage= new CheckoutPage(driver);
+	}
+
+}

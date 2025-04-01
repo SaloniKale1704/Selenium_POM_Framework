@@ -1,0 +1,87 @@
+package com.pages;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
+
+import com.aventstack.extentreports.ExtentTest;
+import com.utils.CommonFunctions;
+import com.utils.ScreenshotUtil;
+
+public class InventoryPage {
+
+	private WebDriver driver;
+	private ExtentTest test;
+
+	CommonFunctions commonFunctions = new CommonFunctions(driver, test);
+
+	public InventoryPage(WebDriver driver, ExtentTest test) {
+		this.driver = driver;
+		PageFactory.initElements(driver, this);
+		this.test = test;
+	}
+
+	@FindBy(className = "product_sort_container")
+	private WebElement filterOption;
+
+	@FindBy(xpath = "//div[@id='inventory_container']//div[@class='inventory_item']")
+	private List<WebElement> itemList;
+
+	@FindBy(className = "inventory_details_price")
+	private WebElement price;
+
+	@FindBy(xpath = "//button[text()='ADD TO CART']")
+	private WebElement addToCartBtn;
+
+	// Actions
+	// Select suitable value from dropdown sort = hilo
+	public void selectHighToLowRange(String sort) {
+		commonFunctions.selectFromDropdownByValue(filterOption, sort, "Filter Option");
+	}
+
+	// Search item from list and click on it
+	public void searchItem(String itemToSearch) {
+		try {
+			for (WebElement item : itemList) {
+				WebElement actualItem = item.findElement(By.xpath(".//a/div"));
+				String expectedItem = actualItem.getText();
+
+				if (expectedItem.contains(itemToSearch)) {
+					actualItem.click();
+					test.info("Item found and clicked: " + itemToSearch);
+					break;
+				} else {
+					System.out.println(itemToSearch + " not available");
+					String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "searchItemError");
+					test.addScreenCaptureFromPath(screenshotPath);
+				}
+			}
+		} catch (Exception e) {
+			test.fail("Failed to search item: " + e.getMessage());
+			String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "searchItemError");
+			test.addScreenCaptureFromPath(screenshotPath);
+		}
+	}
+
+	// Get the actual price of item
+	public void getItemPrice() {
+		try {
+			System.out.println(price.getText());
+			test.pass("Item price retrieved - " + price.getText());
+		} catch (Exception e) {
+			test.fail("Failed to get item price: " + e.getMessage());
+			String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "getItemPriceError");
+			test.addScreenCaptureFromPath(screenshotPath);
+		}
+	}
+
+	// Navigate to cart page
+	public void addToCart() {
+		commonFunctions.clickElement(addToCartBtn, "Add to Cart Button");
+	}
+}

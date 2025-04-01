@@ -1,0 +1,9 @@
+package com.base;
+
+public class PageInitializer {
+
+	public PageInitializer() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

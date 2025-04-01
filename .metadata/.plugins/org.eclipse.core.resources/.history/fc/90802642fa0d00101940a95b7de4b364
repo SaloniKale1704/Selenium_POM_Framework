@@ -1,0 +1,60 @@
+package com.pages;
+
+import java.time.Duration;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import com.aventstack.extentreports.ExtentTest;
+import com.utils.ScreenshotUtil;
+
+public class LoginPage {
+
+	private WebDriver driver;
+	private ExtentTest test ;
+
+	public LoginPage(WebDriver driver,ExtentTest test ) {
+		this.driver = driver;
+		this.test = test;
+		PageFactory.initElements(driver, this);
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+	}
+
+	// Elements
+
+	@FindBy(id = "user-name")
+	private WebElement usernameField;
+
+	@FindBy(name = "password")
+	private WebElement passwordField;
+
+	@FindBy(css = "input[id='login-button']")
+	private WebElement loginBtn;
+
+	// Methods
+	public void enterCredentials(String username, String password) {
+		try {
+			test.info("Entering username: " + username);
+			usernameField.sendKeys(username);
+			passwordField.sendKeys(password);
+			test.info("Credentials Entered.");
+		} catch (Exception e) {
+			test.fail("Failed to enter credentials: " + e.getMessage());
+			String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "enterCredentialsError");
+			test.addScreenCaptureFromPath(screenshotPath);
+		}
+	}
+
+	public void clickLoginBtn() {
+		try {
+			loginBtn.click();
+			test.info("Login button clicked.");
+		} catch (Exception e) {
+			test.fail("Failed to click login button: " + e.getMessage());
+			 String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "clickLoginBtnError");
+	            test.addScreenCaptureFromPath(screenshotPath);
+		}
+	}
+
+}

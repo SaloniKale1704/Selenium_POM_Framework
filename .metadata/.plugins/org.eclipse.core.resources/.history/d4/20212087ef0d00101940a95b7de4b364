@@ -1,0 +1,98 @@
+package com.pages;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
+
+import com.aventstack.extentreports.ExtentTest;
+
+public class InventoryPage {
+
+	private WebDriver driver;
+	private ExtentTest test;
+
+	public InventoryPage(WebDriver driver,ExtentTest test) {
+		this.driver = driver;
+		PageFactory.initElements(driver, this);
+		this.test = test;
+	}
+
+	@FindBy(className = "product_sort_container")
+	private WebElement filterOption;
+
+	@FindBy(xpath = "//div[@id='inventory_container']//div[@class='inventory_item']")
+	private List<WebElement> itemList;
+
+	@FindBy(className = "inventory_details_price")
+	private WebElement price;
+
+	@FindBy(xpath = "//button[text()='ADD TO CART']")
+	private WebElement addToCartBtn;
+
+	// Actions
+	// Select suitable value from dropdown sort = hilo
+	public void selectHighToLowRange(String sort) {
+		try {
+			test.info("Selecting high to low range: " + sort);
+			Select dropdown = new Select(filterOption);
+			if (sort != null) {
+				dropdown.selectByValue(sort);
+				test.pass("Selected high to low range successfully.");
+			} else {
+				test.fail("Value is null.");
+				System.out.println("Value is null");
+			}
+		} catch (Exception e) {
+			test.fail("Failed to select high to low range: " + e.getMessage());
+		}
+	}
+
+	// Search item from list and click on it
+	public void searchItem(String itemToSearch) {
+		try {
+			test.info("Searching for item: " + itemToSearch);
+			for (WebElement item : itemList) {
+				WebElement actualItem = item.findElement(By.xpath(".//a/div"));
+				String expectedItem = actualItem.getText();
+
+				if (expectedItem.contains(itemToSearch)) {
+					actualItem.click();
+					test.pass("Item found and clicked: " + itemToSearch);
+					break;
+				} else {
+					test.fail(itemToSearch + " not available.");
+					System.out.println(itemToSearch + " not available");
+				}
+			}
+		} catch (Exception e) {
+			test.fail("Failed to search item: " + e.getMessage());
+		}
+	}
+
+	// Get the actual price of item
+	public void getItemPrice() {
+		try {
+			test.info("Getting item price.");
+			System.out.println(price.getText());
+			test.pass("Item price retrieved successfully.");
+		} catch (Exception e) {
+			test.fail("Failed to get item price: " + e.getMessage());
+		}
+	}
+
+	// Navigate to cart page
+	public void addToCart() {
+		try {
+			test.info("Adding item to cart.");
+			addToCartBtn.click();
+			test.pass("Item added to cart successfully.");
+		} catch (Exception e) {
+			test.fail("Failed to add item to cart: " + e.getMessage());
+		}
+	}
+}

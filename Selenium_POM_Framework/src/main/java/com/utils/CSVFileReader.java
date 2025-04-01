@@ -1,0 +1,33 @@
+package com.utils;
+
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+
+import java.io.FileReader;
+import java.io.IOException;
+
+
+public class CSVFileReader {
+	public static String[] getTestData(String filePath) throws CsvValidationException {
+		CSVReader reader=null;
+		try{
+			reader = new CSVReader(new FileReader(filePath));
+			reader.readNext(); 
+			return reader.readNext();  
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally {
+			if(reader != null) {
+				try {
+					reader.close();
+				}
+				catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
+}

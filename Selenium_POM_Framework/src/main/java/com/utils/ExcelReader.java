@@ -1,0 +1,68 @@
+package com.utils;
+
+import org.apache.poi.ss.usermodel.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ExcelReader {
+
+	public static Map<String, String> getRowData(String filePath, String sheetName, int rowIndex) {
+		Map<String, String> dataMap = new HashMap<String, String>();
+		FileInputStream fileInputStream = null;
+		Workbook workbook = null;
+
+		try {
+			fileInputStream = new FileInputStream(new File(filePath));
+			workbook = WorkbookFactory.create(fileInputStream);
+			Sheet sheet = workbook.getSheet(sheetName);
+			Row headerRow = sheet.getRow(0); // First row (column names)
+			Row dataRow = sheet.getRow(rowIndex); // Actual data row
+
+			if (headerRow != null && dataRow != null) {
+				for (int i = 0; i < headerRow.getPhysicalNumberOfCells(); i++) {
+					String key = headerRow.getCell(i).getStringCellValue();
+					Cell cell = dataRow.getCell(i);
+					String value = "";
+
+					switch (cell.getCellType()) {
+					case STRING:
+						value = cell.getStringCellValue();
+						break;
+					case NUMERIC:
+						value = String.valueOf(cell.getNumericCellValue());
+						break;
+					case BOOLEAN:
+						value = String.valueOf(cell.getBooleanCellValue());
+						break;
+					case FORMULA:
+						value = cell.getCellFormula();
+						break;
+					default:
+						value = "";
+					}
+					dataMap.put(key, value);
+				}
+			}
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		} 
+		finally {
+			try {
+				if (workbook != null) {
+					workbook.close();
+				}
+				if (fileInputStream != null) {
+					fileInputStream.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return dataMap;
+
+	}
+}

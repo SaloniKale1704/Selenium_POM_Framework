@@ -1,0 +1,121 @@
+package com.examples.UiTests;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
+import com.base.BaseTest;
+import com.pages.LoginPage;
+
+public class Test01 extends BaseTest{
+
+	public static void main(String[] args) {
+		
+		//Launch browser
+		setUp();
+		
+		//Login
+		LoginPage loginPage = new LoginPage(driver);
+		
+		loginPage.enterCredentials("standard_user", "secret_sauce");
+		loginPage.clickLoginBtn();
+		
+		//Filter
+		WebElement filterOption = driver.findElement(By.className("product_sort_container"));
+		Select dropdown = new Select(filterOption);
+		dropdown.selectByValue("hilo");
+		
+		List<WebElement> itemList = driver.findElements(By.xpath("//div[@id='inventory_container']//div[@class='inventory_item']"));
+		for(WebElement item : itemList) {
+			WebElement jacketItem = item.findElement(By.xpath(".//a/div"));
+			String expectedItem = jacketItem.getText();
+			System.out.println(expectedItem);
+			if(expectedItem.contains("Fleece Jacket")) {
+				jacketItem.click();
+				break;
+			}
+			else {
+				System.out.println("Fleece Jacket not available");
+			}
+			}
+			//Add to cart
+			
+			WebElement price = driver.findElement(By.className("inventory_details_price"));
+			System.out.println(price.getText());
+			
+			WebElement addToCartBtn = driver.findElement(By.xpath("//button[text()='ADD TO CART']"));
+			addToCartBtn.click();
+			
+			WebElement cart = driver.findElement(By.xpath("//a[contains(@class,'shopping_cart_link')]"));
+			cart.click();
+		
+			WebElement quantity = driver.findElement(By.className("cart_quantity"));
+			String uiQuantity =  quantity.getText();
+			System.out.println(uiQuantity);
+			int expectedQty = Integer.parseInt(uiQuantity);
+			int actualQty = 1;
+			if( expectedQty == actualQty ) {
+				System.out.println("Quantity "+ actualQty +" verified");
+			}
+			else {
+				System.out.println("Quantity is not as expected");
+			}
+			
+			WebElement checkoutBtn = driver.findElement(By.xpath("//a[text()='CHECKOUT']"));
+			checkoutBtn.click();
+			
+			//Checkout info
+			WebElement firstName = driver.findElement(By.id("first-name"));
+			firstName.sendKeys("Saloni");
+			
+			WebElement lastName = driver.findElement(By.id("last-name"));
+			lastName.sendKeys("Kale");
+			
+			WebElement postalCode = driver.findElement(By.id("postal-code"));
+			postalCode.sendKeys("411033");
+			
+			WebElement continueBtn = driver.findElement(By.cssSelector("input[value='CONTINUE']"));
+			continueBtn.click();
+		
+			String regex = "[$]";
+			WebElement itemPrice = driver.findElement(By.className("summary_subtotal_label"));
+			String itemPriceText = itemPrice.getText();
+			String[] itemPriceArray = itemPriceText.split(regex);
+			double itemPriceDouble = Double.parseDouble(itemPriceArray[1]);
+			System.out.println("Item Price : " +itemPriceDouble);
+			
+			WebElement taxPrice = driver.findElement(By.className("summary_tax_label"));
+			String taxPriceText = taxPrice.getText();
+			String[] taxPriceArray = taxPriceText.split(regex);
+			double taxPriceDouble = Double.parseDouble(taxPriceArray[1]);
+			System.out.println("Applied Tax on  Price : " +taxPriceDouble);
+			
+			WebElement totalPrice = driver.findElement(By.className("summary_total_label"));
+			String totalPriceText = totalPrice.getText();
+			String[] totalPriceArray = totalPriceText.split(regex);
+			double totalPriceDouble = Double.parseDouble(totalPriceArray[1]);
+			System.out.println("Total Item Price : " +totalPriceDouble);
+			
+			if(totalPriceDouble == itemPriceDouble + taxPriceDouble) {
+				System.out.println("Total price is verified" );
+			}
+			WebElement finishBtn = driver.findElement(By.xpath("//a[text()='FINISH']"));
+			finishBtn.click();
+			
+			WebElement actualMessage = driver.findElement(By.xpath("//h2[contains(text(),'THANK YOU FOR YOUR ORDER')]"));
+			String actualText =  actualMessage.getText();
+			String expectedText = "THANK YOU FOR YOUR ORDER";
+			
+			assert actualText.equals(expectedText) : "Order Confirmed text does not match!";
+
+            System.out.println("Order Confirmed ");
+			
+            //Close Browser
+			tearDown();
+		
+		
+	}
+
+}

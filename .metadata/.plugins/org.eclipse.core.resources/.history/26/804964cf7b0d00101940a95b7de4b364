@@ -1,0 +1,20 @@
+package com.utils;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+public class ExcelReader {
+
+    public static String getCellData(String filePath, String sheetName, int row, int col) throws IOException {
+        FileInputStream file = new FileInputStream(filePath);
+        Workbook workbook = XSSFWorkbook(file);
+        Sheet sheet = workbook.getSheet(sheetName);
+        String data = sheet.getRow(row).getCell(col).getStringCellValue();
+        workbook.close();
+        file.close();
+        return data;
+    }
+}

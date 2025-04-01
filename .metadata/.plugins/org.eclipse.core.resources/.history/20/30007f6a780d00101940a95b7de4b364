@@ -1,0 +1,45 @@
+package com.examples.UiTests;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
+import com.base.BaseTest;
+import com.base.PageInitializer;
+
+
+public class Test01 extends BaseTest {
+
+	public static void main(String[] args) {
+
+		// Launch browser
+		setUp();
+
+		//Login Page
+		PageInitializer.loginPage.enterCredentials("standard_user", "secret_sauce");
+		PageInitializer.loginPage.clickLoginBtn();
+
+		//Home Page 
+		PageInitializer.homePage.selectHighToLowRange("hilo");
+		PageInitializer.homePage.searchItem("Fleece Jacket");
+		PageInitializer.homePage.getItemPrice();
+		PageInitializer.homePage.addToCart();
+
+		//Cart Page
+		PageInitializer.cartPage.goToCartPage();
+		PageInitializer.cartPage.verifyItemQty(1);
+		PageInitializer.cartPage.clickCheckoutBtn();
+
+		//Checkout Page
+		PageInitializer.checkoutPage.enterChecoutInfo("Saloni", "Kale", "411031");
+		PageInitializer.checkoutPage.verifyItemPricesWithTotal();
+		PageInitializer.checkoutPage.ValidateOrderConfirmation("THANK YOU FOR YOUR ORDER");
+		
+		// Close Browser
+		tearDown();
+
+	}
+
+}

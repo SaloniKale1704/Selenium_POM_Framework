@@ -1,0 +1,95 @@
+package com.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class CheckoutPage {
+	private WebDriver driver;
+	public CheckoutPage(WebDriver driver) {
+		this.driver = driver;
+		PageFactory.initElements(driver, this);
+	}
+
+	@FindBy(id="first-name")
+	private WebElement firstName;
+	
+	@FindBy(id="last-name")
+	private WebElement lastName;
+	
+	@FindBy(id="postal-code")
+	private WebElement postalCode;
+	
+	@FindBy(css="input[value='CONTINUE']")
+	private WebElement continueBtn;
+	
+	@FindBy(className="summary_subtotal_label")
+	private WebElement itemPrice;
+	
+	@FindBy(className="summary_tax_label")
+	private WebElement taxPrice;
+	
+	@FindBy(className="summary_total_label")
+	private WebElement totalPrice;
+	
+
+	//Actions
+	//Enter Checkout Information
+	public void enterChecoutInfo(String firstName, String lastName,String postalCode) {
+		this.firstName.sendKeys(firstName);
+		this.lastName.sendKeys(lastName);
+		this.postalCode.sendKeys(postalCode);
+		
+		continueBtn.click();
+	}
+	
+	//Verify all prices
+	public void verifyItemPricesWithTotal() {
+		//split string from $ onwards
+		String regex = "[$]";
+		
+		//Item Price
+		String itemPriceText = itemPrice.getText();
+		String[] itemPriceArray = itemPriceText.split(regex);
+		double itemPriceDouble = Double.parseDouble(itemPriceArray[1]);
+		System.out.println("Item Price : " +itemPriceDouble);
+
+		//Tax
+		String taxPriceText = taxPrice.getText();
+		String[] taxPriceArray = taxPriceText.split(regex);
+		double taxPriceDouble = Double.parseDouble(taxPriceArray[1]);
+		System.out.println("Applied Tax on  Price : " +taxPriceDouble);
+
+		//Total Amount
+		String totalPriceText = totalPrice.getText();
+		String[] totalPriceArray = totalPriceText.split(regex);
+		double totalPriceDouble = Double.parseDouble(totalPriceArray[1]);
+		System.out.println("Total Item Price : " +totalPriceDouble);
+		
+		//Total = itemPrice + tax
+		if(totalPriceDouble == itemPriceDouble + taxPriceDouble) {
+			System.out.println("Total price is verified" );
+		}
+		else {
+			System.out.println("Total Price does not match");
+		}
+	}
+	
+	/*
+	 
+			
+			WebElement finishBtn = driver.findElement(By.xpath("//a[text()='FINISH']"));
+			finishBtn.click();
+			
+			WebElement actualMessage = driver.findElement(By.xpath("//h2[contains(text(),'THANK YOU FOR YOUR ORDER')]"));
+			String actualText =  actualMessage.getText();
+			String expectedText = "THANK YOU FOR YOUR ORDER";
+			
+			assert actualText.equals(expectedText) : "Order Confirmed text does not match!";
+
+            System.out.println("Order Confirmed ");
+			
+	 */
+}

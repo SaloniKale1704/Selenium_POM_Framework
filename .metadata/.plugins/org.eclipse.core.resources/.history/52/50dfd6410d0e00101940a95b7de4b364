@@ -1,0 +1,127 @@
+package com.utils;
+
+import java.io.File;
+import java.time.Duration;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.MediaEntityBuilder;
+
+public class CommonFunctions {
+
+	private WebDriver driver;
+	private ExtentTest test;
+
+	public CommonFunctions(WebDriver driver, ExtentTest test) {
+		this.driver = driver;
+		this.test = test;
+	}
+
+	private WebDriverWait getWait() {
+		return new WebDriverWait(driver, Duration.ofSeconds(10));
+
+	}
+	
+	// click on element
+	public void clickElement(WebElement element, String elementName) {
+		
+		try {
+			getWait().until(ExpectedConditions.elementToBeClickable(element));
+			element.click();
+			
+			// Capture screenshot after clicking the element
+			String screenshotPath = ScreenshotUtil.takeScreenshot(driver, elementName + "Clicked");
+			String relativeScreenshotPath = "./Screenshots/" +new File(screenshotPath).getName();
+			test.info("Clicked on " + elementName, MediaEntityBuilder.createScreenCaptureFromPath(relativeScreenshotPath).build());			
+
+		} catch (Exception e) {
+			
+			String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "click" + elementName + "Error");
+			String relativeScreenshotPath = "./Screenshots/" +new File(screenshotPath).getName();
+			test.fail("Failed to click on " + elementName, MediaEntityBuilder.createScreenCaptureFromPath(relativeScreenshotPath).build());		
+		}
+	}
+
+	// Enter text in field
+    public void enterText(WebElement element, String text, String elementName) {
+        try {
+        	getWait().until(ExpectedConditions.visibilityOf(element));
+            element.sendKeys(text);
+            
+
+            // Capture screenshot after entering text
+            String screenshotPath = ScreenshotUtil.takeScreenshot(driver, elementName + "TextEntered");
+			String relativeScreenshotPath = "./Screenshots/" +new File(screenshotPath).getName();
+            test.info("Entered text into " + elementName + ": " + text,MediaEntityBuilder.createScreenCaptureFromPath(relativeScreenshotPath).build());
+
+        } catch (Exception e) {
+        	String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "enterText" + elementName + "Error");
+			String relativeScreenshotPath = "./Screenshots/" +new File(screenshotPath).getName();
+            test.fail("Failed to enter text into " + elementName,MediaEntityBuilder.createScreenCaptureFromPath(relativeScreenshotPath).build());	
+            
+         }
+    }
+
+	// select value from dropdown
+	public void selectFromDropdownByValue(WebElement element, String value, String elementName) {
+		try {
+			Select dropdown = new Select(element);
+			dropdown.selectByValue(value);
+			
+			// Capture screenshot after selecting 
+			String screenshotPath = ScreenshotUtil.takeScreenshot(driver, elementName + "ValueSelected");
+			String relativeScreenshotPath = "./Screenshots/" +new File(screenshotPath).getName();
+			test.info("Value selected from " + elementName ,MediaEntityBuilder.createScreenCaptureFromPath(relativeScreenshotPath).build());
+
+		} catch (Exception e) {
+			String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "enterText" + elementName + "Error");
+			String relativeScreenshotPath = "./Screenshots/" +new File(screenshotPath).getName();
+            test.fail("Failed to select value from " + elementName ,MediaEntityBuilder.createScreenCaptureFromPath(relativeScreenshotPath).build());	
+            
+		}
+	}
+
+	// Verify Webelement with string
+	public void verifyText(WebElement element, String expectedText, String elementName) {
+		try {
+			String actualText = element.getText();
+			if (actualText.equals(expectedText)) {
+				String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "verifyText" + elementName + "Error");
+				String relativeScreenshotPath = "./Screenshots/" +new File(screenshotPath).getName();
+				test.pass("Text verified in " + elementName ,MediaEntityBuilder.createScreenCaptureFromPath(relativeScreenshotPath).build());
+
+			}
+		} catch (Exception e) {
+			String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "verifyText" + elementName + "Error");
+			String relativeScreenshotPath = "./Screenshots/" +new File(screenshotPath).getName();
+			test.fail("Failed to verify text in " + elementName ,MediaEntityBuilder.createScreenCaptureFromPath(relativeScreenshotPath).build());	
+            
+		}
+	}
+
+	// Get text from Webpage
+	public String getText(WebElement element, String elementName) {
+		try {
+			String text = element.getText();
+			String screenshotPath = ScreenshotUtil.takeScreenshot(driver, elementName + "TextFound");
+			String relativeScreenshotPath = "./Screenshots/" +new File(screenshotPath).getName();
+			test.info("Text retrieved from " + elementName ,MediaEntityBuilder.createScreenCaptureFromPath(relativeScreenshotPath).build());
+			
+			return text;
+		} 
+		catch (Exception e) {
+			
+			String screenshotPath = ScreenshotUtil.takeScreenshot(driver, "getText" + elementName + "Error");
+			String relativeScreenshotPath = "./Screenshots/" +new File(screenshotPath).getName();
+			test.fail("Failed to get text from " + elementName ,MediaEntityBuilder.createScreenCaptureFromPath(relativeScreenshotPath).build());	
+            
+			return null;
+		}
+	}
+
+}

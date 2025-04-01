@@ -1,0 +1,122 @@
+package com.pages;
+
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.aventstack.extentreports.ExtentTest;
+
+public class CheckoutPage {
+	private WebDriver driver;
+	private WebDriverWait wait;
+	private ExtentTest test;
+
+	public CheckoutPage(WebDriver driver,ExtentTest test) {
+		this.driver = driver;
+		this.test = test;
+		PageFactory.initElements(driver, this);
+		wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	}
+
+	@FindBy(id = "first-name")
+	private WebElement firstName;
+
+	@FindBy(id = "last-name")
+	private WebElement lastName;
+
+	@FindBy(id = "postal-code")
+	private WebElement postalCode;
+
+	@FindBy(css = "input[value='CONTINUE']")
+	private WebElement continueBtn;
+
+	@FindBy(className = "summary_subtotal_label")
+	private WebElement itemPrice;
+
+	@FindBy(className = "summary_tax_label")
+	private WebElement taxPrice;
+
+	@FindBy(className = "summary_total_label")
+	private WebElement totalPrice;
+
+	@FindBy(xpath = "//a[text()='FINISH']")
+	private WebElement finishBtn;
+
+	@FindBy(className = "pony_express")
+	private WebElement imgSauceLab;
+
+	@FindBy(className = "complete-header")
+	private WebElement orderCompleteText;
+
+	// Actions
+	// Enter Checkout Information
+	public void enterChecoutInfo(String firstName, String lastName, String postalCode) {
+		try {
+			this.firstName.sendKeys(firstName);
+			this.lastName.sendKeys(lastName);
+			this.postalCode.sendKeys(postalCode);
+			continueBtn.click();
+			test.info("Checkout information entered successfully.");
+		} catch (Exception e) {
+			test.fail("Failed to enter checkout information: " + e.getMessage());
+		}
+	}
+
+	// Verify all prices
+	public void verifyItemPricesWithTotal() {
+		try {
+			String regex = "[$]";
+
+			// Item Price
+			String itemPriceText = itemPrice.getText();
+			String[] itemPriceArray = itemPriceText.split(regex);
+			double itemPriceDouble = Double.parseDouble(itemPriceArray[1]);
+			System.out.println("Item Price : " + itemPriceDouble);
+
+			// Tax
+			String taxPriceText = taxPrice.getText();
+			String[] taxPriceArray = taxPriceText.split(regex);
+			double taxPriceDouble = Double.parseDouble(taxPriceArray[1]);
+			System.out.println("Applied Tax on Price : " + taxPriceDouble);
+
+			// Total Amount
+			String totalPriceText = totalPrice.getText();
+			String[] totalPriceArray = totalPriceText.split(regex);
+			double totalPriceDouble = Double.parseDouble(totalPriceArray[1]);
+			System.out.println("Total Item Price : " + totalPriceDouble);
+
+			// Total = itemPrice + tax
+			if (totalPriceDouble == itemPriceDouble + taxPriceDouble) {
+				System.out.println("Total price is verified");
+				test.pass("Total price verified - " +  totalPriceDouble);
+			} else {
+				System.out.println("Total Price does not match");
+				test.fail("Total price does not match.");
+			}
+
+			finishBtn.click();
+		} catch (Exception e) {
+			test.fail("Failed to verify item prices: " + e.getMessage());
+		}
+	}
+
+	public void ValidateOrderConfirmation(String expectedText) {
+		try {
+			test.info("Validating order confirmation.");
+			wait.until(ExpectedConditions.visibilityOf(imgSauceLab));
+
+			String actualText = orderCompleteText.getText();
+			assert actualText.equals(expectedText) : "Order Confirmed text does not match!";
+			System.out.println("Order Confirmed");
+			test.pass("Order confirmation validated successfully.");
+		} catch (Exception e) {
+			test.fail("Failed to validate order confirmation: " + e.getMessage());
+		}
+	}
+}

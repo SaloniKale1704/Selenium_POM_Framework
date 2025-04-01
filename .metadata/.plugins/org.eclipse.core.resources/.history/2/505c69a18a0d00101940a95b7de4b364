@@ -1,0 +1,59 @@
+package com.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class CartPage {
+
+	private WebDriver driver;
+
+	public CartPage(WebDriver driver) {
+		this.driver = driver;
+		PageFactory.initElements(driver, this);
+	}
+
+	@FindBy(xpath = "//a[contains(@class,'shopping_cart_link')]")
+	private WebElement cart;
+
+	@FindBy(className = "cart_quantity")
+	WebElement quantity;
+
+	@FindBy(xpath = "//a[text()='CHECKOUT']")
+	WebElement checkoutBtn;
+
+	// Actions
+
+	// go to cart page
+	public void goToCartPage() {
+		cart.click();
+	}
+
+	// Verify quantity // 1.0
+	public void verifyItemQty(String actualQty) {
+		double actualQtyDouble = Double.parseDouble(actualQty);
+		int actualQtyText = (int) actualQtyDouble;
+
+		// Get the expected quantity from the web element and convert it to an integer
+		String expectedQty = quantity.getText();
+		int expectedQtyText = Integer.parseInt(expectedQty);
+
+		// Print the expected quantity for debugging purposes
+		System.out.println(expectedQty);
+
+		// Verify if the actual quantity matches the expected quantity
+		if (expectedQtyText == actualQtyText) {
+			System.out.println("Quantity " + actualQty + " verified");
+		} else {
+			System.out.println("Quantity is not as expected");
+		}
+	}
+
+	// click on checkout button
+	public void clickCheckoutBtn() {
+		checkoutBtn.click();
+	}
+
+}

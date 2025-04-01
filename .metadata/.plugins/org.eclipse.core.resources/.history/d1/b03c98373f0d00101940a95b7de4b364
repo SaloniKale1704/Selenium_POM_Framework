@@ -1,0 +1,70 @@
+package com.pages;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
+
+public class HomePage {
+
+	private WebDriver driver;
+	public HomePage(WebDriver driver) {
+		this.driver = driver;
+		PageFactory.initElements(driver, this);
+		
+	}
+
+	@FindBy(className ="product_sort_container")
+	private WebElement filterOption;
+	
+	@FindBy(xpath="//div[@id='inventory_container']//div[@class='inventory_item']")
+	private List<WebElement> itemList;
+	
+	@FindBy(className="inventory_details_price")
+	private WebElement price;
+	
+	@FindBy(xpath="//button[text()='ADD TO CART']")
+	private WebElement addToCartBtn;
+	
+	//Actions
+	public void selectHighToLowRange(String sort){
+		Select dropdown = new Select(filterOption);
+		dropdown.selectByValue(sort);
+	}
+	
+	public void searchItem(String ) {
+		
+	}
+	
+	/*
+			//Filter
+//			WebElement filterOption = driver.findElement(By.className("product_sort_container"));
+			
+			
+//			List<WebElement> itemList = driver.findElements(By.xpath("//div[@id='inventory_container']//div[@class='inventory_item']"));
+			for(WebElement item : itemList) {
+				WebElement jacketItem = item.findElement(By.xpath(".//a/div"));
+				String expectedItem = jacketItem.getText();
+				System.out.println(expectedItem);
+				if(expectedItem.contains("Fleece Jacket")) {
+					jacketItem.click();
+					break;
+				}
+				else {
+					System.out.println("Fleece Jacket not available");
+				}
+				}
+				//Add to cart
+				
+//				WebElement price = driver.findElement(By.className("inventory_details_price"));
+				System.out.println(price.getText());
+				
+//				WebElement addToCartBtn = driver.findElement(By.xpath("//button[text()='ADD TO CART']"));
+				addToCartBtn.click();
+			*/	
+
+}

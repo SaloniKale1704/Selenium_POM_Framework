@@ -1,0 +1,9 @@
+package com.pages;
+
+public class CheckoutPage {
+
+	public CheckoutPage() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

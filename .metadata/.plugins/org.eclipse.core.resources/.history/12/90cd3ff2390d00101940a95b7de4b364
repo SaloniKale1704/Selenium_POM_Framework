@@ -1,0 +1,9 @@
+package com.base;
+
+public class BaseClass {
+
+	public BaseClass() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

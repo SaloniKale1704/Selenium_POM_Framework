@@ -1,0 +1,9 @@
+package com.utils;
+
+public class CommonFunctions {
+
+	public CommonFunctions() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

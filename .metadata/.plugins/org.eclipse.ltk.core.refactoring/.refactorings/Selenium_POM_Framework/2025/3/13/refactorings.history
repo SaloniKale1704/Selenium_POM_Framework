@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete element from project &apos;Selenium_POM_Framework&apos;&#x0D;&#x0A;- Original project: &apos;Selenium_POM_Framework&apos;&#x0D;&#x0A;- Original element: &apos;Selenium_POM_Framework/src/test/java/com.examples&apos;" description="Delete element" element1="/src\/test\/java=/optional=/true=/=/maven.pomderived=/true=/=/test=/true=/&lt;com.examples" elements="1" flags="589830" id="org.eclipse.jdt.ui.delete" resources="0" stamp="1743270677219" subPackages="false" version="1.0"/>
+</session>

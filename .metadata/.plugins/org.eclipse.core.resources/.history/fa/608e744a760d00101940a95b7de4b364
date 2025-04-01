@@ -1,0 +1,26 @@
+package com.utils;
+import com.opencsv.CSVReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class CSVReader {
+    public static void main(String[] args) {
+        String csvFile = "src/main/resources/TestData/credentials.csv"; // Path to CSV file
+        try (CSVReader reader = new CSVReader(new FileReader(csvFile))) {
+            String[] nextLine;
+            reader.readNext(); // Skip Header Row
+
+            while ((nextLine = reader.readNext()) != null) {
+                String url = nextLine[0];
+                String username = nextLine[1];
+                String password = nextLine[2];
+
+                System.out.println("URL: " + url);
+                System.out.println("Username: " + username);
+                System.out.println("Password: " + password);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

@@ -1,0 +1,19 @@
+package com.base;
+
+import com.pages.CartPage;
+import com.pages.CheckoutPage;
+import com.pages.HomePage;
+import com.pages.LoginPage;
+
+public class PageInitializer {
+
+	public static LoginPage loginPage;
+	public static HomePage homePage;
+	public static CartPage cartPage;
+	public static CheckoutPage checkoutPage;
+	
+	public PageInitializer() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

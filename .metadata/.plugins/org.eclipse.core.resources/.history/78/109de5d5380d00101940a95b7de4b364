@@ -1,0 +1,112 @@
+package com.examples.UiTests;
+
+import java.time.Duration;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+
+public class Test01 {
+
+	public static void main(String[] args) {
+		WebDriver driver = new ChromeDriver();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		
+		driver.get("https://www.saucedemo.com/v1/");
+		driver.manage().window().maximize();
+		
+		//Login
+		WebElement username = driver.findElement(By.id("user-name"));
+		username.sendKeys("standard_user");
+		
+		WebElement password = driver.findElement(By.name("password"));
+		password.sendKeys("secret_sauce");
+		
+		WebElement loginBtn = driver.findElement(By.cssSelector("input[id='login-button']"));
+		loginBtn.click();
+		
+		//Filter
+		WebElement filterOption = driver.findElement(By.className("product_sort_container"));
+		Select dropdown = new Select(filterOption);
+		dropdown.selectByValue("hilo");
+		
+		List<WebElement> itemList = driver.findElements(By.xpath("//div[@id='inventory_container']//div[@class='inventory_item']"));
+		for(WebElement item : itemList) {
+			WebElement jacketItem = item.findElement(By.xpath(".//a/div"));
+			String expectedItem = jacketItem.getText();
+			System.out.println(expectedItem);
+			if(expectedItem.contains("Fleece Jacket")) {
+				jacketItem.click();
+				break;
+			}
+			else {
+				System.out.println("Fleece Jacket not available");
+			}
+		}
+			//Add to cart
+			
+			WebElement price = driver.findElement(By.className("inventory_details_price"));
+			System.out.println(price.getText());
+			
+			WebElement addToCartBtn = driver.findElement(By.xpath("//button[text()='ADD TO CART']"));
+			addToCartBtn.click();
+			
+			WebElement cart = driver.findElement(By.xpath("//a[contains(@class,'shopping_cart_link')]"));
+			cart.click();
+		
+			WebElement quantity = driver.findElement(By.className("cart_quantity"));
+			String uiQuantity =  quantity.getText();
+			System.out.println(uiQuantity);
+			int qty = Integer.parseInt(uiQuantity);
+			if( qty == 1) {
+				System.out.println("Quantity = 1 verified");
+			}
+			else {
+				System.out.println("Quantity is not as expected");
+			}
+			
+			WebElement checkoutBtn = driver.findElement(By.xpath("//a[text()='CHECKOUT']"));
+			checkoutBtn.click();
+			
+			//Checkout info
+			WebElement firstName = driver.findElement(By.id("first-name"));
+			firstName.sendKeys("Saloni");
+			
+			WebElement lastName = driver.findElement(By.id("last-name"));
+			lastName.sendKeys("Kale");
+			
+			WebElement postalCode = driver.findElement(By.id("postal-code"));
+			postalCode.sendKeys("411033");
+			
+			WebElement continueBtn = driver.findElement(By.cssSelector("input[value='CONTINUE']"));
+			continueBtn.click();
+		
+			WebElement itemPrice = driver.findElement(By.className("summary_subtotal_label"));
+			String itemPriceText = itemPrice.getText();
+			String regex = "[$]";
+			String[] itemPriceArray = itemPriceText.split(regex);
+//			String stringItemPrice = itemPriceArray[1].trim();
+			double itemPriceDouble = Double.parseDouble(itemPriceArray[1]);
+			
+			System.out.println(itemPriceDouble);
+			
+			WebElement finishBtn = driver.findElement(By.xpath("//a[text()='FINISH']"));
+			finishBtn.click();
+			
+			WebElement actualMessage = driver.findElement(By.xpath("//h2[contains(text(),'THANK YOU FOR YOUR ORDER')]"));
+			String actualText =  actualMessage.getText();
+			String expectedText = "THANK YOU FOR YOUR ORDER";
+			
+			assert actualText.equals(expectedText) : "Order Confirmed text does not match!";
+
+            System.out.println("Order Confirmed ");
+			
+			driver.quit();
+		
+		
+	}
+
+}

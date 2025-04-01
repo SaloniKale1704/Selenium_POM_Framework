@@ -1,0 +1,9 @@
+package com.utils;
+
+public class ScreenshotUtil {
+
+	public ScreenshotUtil() {
+		// TODO Auto-generated constructor stub
+	}
+
+}
