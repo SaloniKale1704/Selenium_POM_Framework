@@ -1,62 +1,82 @@
 # Selenium POM Framework
 
-## Overview
-This repository contains a Selenium Page Object Model (POM) framework for automating the Sauce Demo website. The framework includes features such as ExtentReports for reporting, screenshot capture, and common utility functions.
+This project is a Selenium-based framework that follows the Page Object Model (POM) design pattern. It is intended for automated testing of web applications. The framework is built using Java, Selenium WebDriver, ExtentReports for reporting, and other utilities for enhanced test automation.
 
-## Table of Contents
-- Workflow
-- Implementation
-  - POM Framework
-  - ExtentReports
-  - Screenshot Functionality
-  - Common Functions
-- Setup
-- Usage
-- Execution
+## Created by: **Saloni Kale**
 
-## Workflow
-1. **Navigate to Sauce Demo Website**: The test script navigates to the Sauce Demo website.
-2. **Login**: The script performs login using valid credentials.
-3. **Product Selection**: The script selects products to add to the cart.
-4. **Checkout**: The script proceeds to checkout and completes the purchase.
-5. **Logout**: The script logs out from the application.
+### Project Structure
+- **com.base**: Contains base test and setup methods.
+- **com.pages**: Contains the page objects (LoginPage, CheckoutPage, etc.).
+- **com.utils**: Contains utility classes for handling common functions like taking screenshots and managing reports.
+- **com.examples.UiTests**: Contains test cases utilizing the POM.
 
-## Implementation
+### Key Features:
+- **Page Object Model**: All page interactions are abstracted in page classes.
+- **ExtentReports Integration**: All test results are captured in HTML reports with screenshots.
+- **CSV and Excel Integration**: Test data is pulled from CSV and Excel files for parameterization.
+- **Reusable Utility Functions**: Common functions for actions like clicking elements, entering text, etc.
 
-### POM Framework
-The Page Object Model (POM) design pattern is used to create an object repository for web elements. This improves test maintenance and reduces code duplication.
+## Getting Started
 
-- **Page Classes**: Each web page is represented by a class, containing web elements and methods to interact with them.
-- **Test Classes**: Test scripts use the page classes to perform actions and assertions.
+### Prerequisites
+Ensure you have the following installed:
+- **Java** (JDK 11 or higher)
+- **Eclipse IDE** for Java Developers
+- **Maven** (for dependency management)
+- **Selenium WebDriver** dependencies (automatically handled by Maven)
+- **ChromeDriver** (if using Google Chrome for tests)
+- **ExtentReports** (for reporting)
 
-### ExtentReports
-ExtentReports is used for generating detailed and visually appealing test reports.
+### Setup Instructions
 
-- **Configuration**: The `extent-config.xml` file is used to configure the report.
-- **Usage**: The `ExtentManager` class initializes the report, and the `ExtentTestManager` class is used to log test steps.
+1. **Clone the repository**:
+   If you haven't already cloned the repository, use the following command:
+   ```bash
+   git clone https://github.com/your-repository-url
 
-### Screenshot Functionality
-Screenshots are captured for failed test cases to aid in debugging.
+2. Import the project into Eclipse:
+    1. Open Eclipse IDE.
+    2. Go to File -> Import -> Maven -> Existing Maven Projects.
+    3. Select the project directory and click Finish.
 
-- **Implementation**: The `ScreenshotUtil` class contains methods to capture and save screenshots.
-- **Integration**: The screenshot functionality is integrated with the test listener to capture screenshots on test failure.
+3. Configure Maven dependencies:
+     The pom.xml file contains all necessary dependencies for Selenium, ExtentReports, etc. Maven will automatically fetch the required dependencies when the project is imported into Eclipse.
 
-### Common Functions
-Common utility functions are created to avoid code duplication and improve reusability.
+4. Update ChromeDriver:
+     Download the appropriate version of ChromeDriver for your Chrome browser from ChromeDriver Download. Ensure the chromedriver.exe is placed in a known path and that path is set in your system's environment variables or configured in the BaseTest class.
 
-- **Utilities**: The `CommonFunctions` class contains methods for common actions like clicking, sending keys, and waiting for elements.
+### Running the Tests
 
-## Setup 
-1. Download the ZIP folder from the GitHub repository.
-2. Extract the ZIP folder to your desired location.
-3. Open Eclipse IDE.
-4. Import the existing Maven project:
-5. Go to File > Import > Existing Maven Projects.
-6. Select the extracted folder path.
-7. Run the Test01.java file:
-8. Navigate to the src/test/java directory.
-9. Locate and run the Test01.java file.
+1. Configure Test Data:
+      The test data (username, password, etc.) is pulled from credentials.csv and testData.xlsx in the src/main/resources/TestData/ folder. Make sure these files are updated with valid data.
 
-## View the report:
-1. After execution, go to src/test/java/resources/Reports.
-2. Open the latest report in your web browser.
+2. Execute the Test:
+   1. You can run any test class by right-clicking the class (e.g., Test01) and selecting Run As -> Java Application.
+   2. Alternatively, you can use Maven to run tests:
+
+### View Reports:
+  Test execution reports are generated under the src/test/resources/Reports/ directory. Open the HTML file to view the results.
+
+### Directory Structure
+
+Selenium-POM-Framework/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   ├── com/
+│   │   │   │   ├── base/
+│   │   │   │   ├── pages/
+│   │   │   │   └── utils/
+│   │   ├── resources/
+│   │   │   ├── TestData/
+│   │   │   │   ├── credentials.csv
+│   │   │   │   └── testData.xlsx
+│   ├── test/
+│   │   ├── java/
+│   │   │   └── UiTests/
+│   │   │       └── Test01/
+│   │   ├── resources/
+│   │   │   ├── Screenshots/
+│   │   │   └── Reports/
+└── pom.xml
+
